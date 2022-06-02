@@ -1,0 +1,28 @@
+Oi Raiza
+
+Terminei as simulações. Demorei um pouco porque o modelo do drone estava apresentando um problema numérico incomum.
+Ao rodar as LMIs considerando apenas estabilidade com restrição na entrada eu estava ficando travado em duas situações.
+1 - u1 ultrapassava um pouco o valor desejado, normalmente ficava algo do tipo: 1.2<= max{ |u1(t)| } <= 2.3
+2 - O valor de u1 ficava muito pequeno: 0.1<= max{ |u1(t)| } <= 0.2
+
+O caso 2 atende a restrição de projeto, mas o transitório do sistema fica muito ruim. Demorava muito pro drone atingir a trajetória de interesse. Essa não é uma situação comum, acredito que alguma coisa na estrutura do modelo estava causando esse problema. Para reduzir o transitório do sistema eu adicionei uma restrição na taxa de decaimento.
+Ou seja, troquei a condição \dot{V}<0 por \dot{V}<-2*dec*V
+Essa é a maneira mais fácil que existe para diminuir o tempo de estabelecimento de um sistema usando LMIs. Usei um valor bem pequeno para o parâmetro dec e já foi o suficiente para obter uma solução razoável.
+
+Agora vamos as mudanças no código das LMIs
+
+1a mudança
+troquei a condição 
+P_i>= theta2*eye(nx)
+por
+W+W'<=theta2*eye(nx)  (considerando theta2<0)
+As suas LMIs impõe que W+W'<=0 então eu só ajustei o limite superior para os autovalores. Isso ajuda muito na hora de obter o ganho local
+K_i=Y_i*inv(M)
+Essa mudança pode ser vista na linha 245 (journal_flavio.m) 
+
+2a mudança
+Adicionei o termo +2*dec*Q{i} no elemento 1x1 das matrizes usadas nas LMIs (linhas 221 ou 234)
+
+Caso fique com alguma dúvida é só me avisar. Pra estender pra norma Hinf basta efetuar essas mesmas modificações nas LMIs.
+Talvez seja necessário mudar um pouco o valor dos parâmetros, nesse caso sugiro que vc tente primeiro diminuir o valor de 'dec'
+Caso as LMIs continuem infactíveis então também será necessário ir aumentando o valor de theta1 e gama
