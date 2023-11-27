@@ -36,7 +36,7 @@ ControlType = 'MozelliTeo6';
 % ControlType = 'openloop';
 % ICUAS
 
-Modeltype = 2;
+Modeltype = 1;
 
 MaxRotSpd       = 100; %max rotation speed in deg/s (yaw rate)
 MaxXSpd         = 0.5; %max X speed in m/s 

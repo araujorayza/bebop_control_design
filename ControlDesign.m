@@ -1,4 +1,7 @@
+%Script to calculate the controlller gains for the bebop quadrotor
+%mostly based on various T-S Fuzzy models
 [A,B,h,C] = ErrorModeling(Modeltype,gamma)
+
 switch ControlType
     case 'openloop'
         K = zeros(4);
