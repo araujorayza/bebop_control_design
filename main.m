@@ -10,7 +10,7 @@ VelYaw  = 4;
 PosX    = 5;
 PosY    = 6;
 PosZ    = 7;
-PosYaw  = 8;
+PosYaw  = 8;3
 global small_k 
 %% SYSTEM INIT AND SIM PARAMETERS
 sphinx = false; %flag for which gamma we use
@@ -29,7 +29,7 @@ TRAJECTORY      = 'circle';
 % TRAJECTORY = 'LemniscataBernoulli';
 
 
-ControlType = 'MozelliTeo6';
+ControlType = 'CNMAC2023';
 % ControlType = 'WeiTeo1';
 % MozelliTeo6
 % SereniTeo2
