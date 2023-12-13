@@ -50,7 +50,7 @@ switch ControlType
         K = ICUAS_Teo2(Modeltype,A,B,B,C,phi,Mu,ga);
         ControlType = 'PDC';
     case 'CNMAC2023'
-        K = CNMAC2023(Modeltype,A,B);
+        [K,P,R,L,A,G,Rset] = CNMAC2023(Modeltype,A,B);
         ControlType = 'PDC';
     otherwise
         K=[];
@@ -773,7 +773,7 @@ end
 end
 
 %%
-function K = CNMAC2023(Modeltype,A,B)
+function [K,P,R,L,A,G,Rset] = CNMAC2023(Modeltype,A,B)
 if Modeltype ~= 1
     K = []
 else
@@ -850,74 +850,74 @@ else
         P=[];
     end
 
-    % Set estimation
-    V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
-    hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
-    Dset = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x5,x7,psi]*hdot(x1,x2,x3,x4,x5,x6,x7,psi,k)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
-
-    %calculate V and D
-    meshPoints=500;
-    tol=10/meshPoints;
-    x1 = linspace(-5,5,meshPoints);
-    x2 = linspace(-5,5,meshPoints);
-    x3 = linspace(-5,5,meshPoints);
-    x4 = linspace(-5,5,meshPoints);
-    x5 = linspace(-5,5,meshPoints);
-    x6 = linspace(-5,5,meshPoints);
-    x7 = linspace(-5,5,meshPoints);
-    psi = linspace(-pi,pi,meshPoints);
-    %Ve=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
-    %De=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
-    for X1=1:length(x1)
-        for X2=1:length(x2)
-            for X3=1:length(x3)
-                for X4=1:length(x4)
-                    for X5=1:length(x5)
-                        for X6=1:length(x6)
-                            for X7=1:length(x7)
-                                for X8=1:length(psi)
-                                    Ve(X1,X2,X3,X4,X5,X6,X7,X8) = V(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
-                                    De(X1,X2,X3,X4,X5,X6,X7,X8) = Dset(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-
-    for  comb = nchoosek(1:8,2)
-        
-
-    end
-
-    meshPoints=500;
-    tol=10/meshPoints;
-    x = linspace(-5,5,meshPoints);
-    y = linspace(-5,5,meshPoints);
-
-    [X,Y]=meshgrid(x,y);
-    for i=1:length(x)
-        for j = 1:length(y)
-            Ve(i,j) = V(X(i,j),Y(i,j));
-            De(i,j) = Dset(X(i,j),Y(i,j));
-        end
-    end
-
-    %calculate b
-    b=min([min(Ve(:,1)), min(Ve(:,end)), min(Ve(1,:)), min(Ve(end,:))])
-    b=fix(b*1e2)/1e2;
-
-    figure(1);
-    [~,c]=contour(X,Y,Ve,linspace(0,b,5),'r','ShowText','on','DisplayName','V')
-    hold on
-    [~,d]=contour(X,Y,De,[0,fix(max(max(De))*1e2)/1e2],'b','ShowText','on','DisplayName','D')
-    legend;
-    %from the graph
-%     l = 0.18;
-    K = K;
+%     % Set estimation
+%     V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
+%     hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
+%     Dset = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x5,x7,psi]*hdot(x1,x2,x3,x4,x5,x6,x7,psi,k)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
+% 
+%     %calculate V and D
+%     meshPoints=500;
+%     tol=10/meshPoints;
+%     x1 = linspace(-5,5,meshPoints);
+%     x2 = linspace(-5,5,meshPoints);
+%     x3 = linspace(-5,5,meshPoints);
+%     x4 = linspace(-5,5,meshPoints);
+%     x5 = linspace(-5,5,meshPoints);
+%     x6 = linspace(-5,5,meshPoints);
+%     x7 = linspace(-5,5,meshPoints);
+%     psi = linspace(-pi,pi,meshPoints);
+%     %Ve=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
+%     %De=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
+%     for X1=1:length(x1)
+%         for X2=1:length(x2)
+%             for X3=1:length(x3)
+%                 for X4=1:length(x4)
+%                     for X5=1:length(x5)
+%                         for X6=1:length(x6)
+%                             for X7=1:length(x7)
+%                                 for X8=1:length(psi)
+%                                     Ve(X1,X2,X3,X4,X5,X6,X7,X8) = V(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
+%                                     De(X1,X2,X3,X4,X5,X6,X7,X8) = Dset(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
+%                                 end
+%                             end
+%                         end
+%                     end
+%                 end
+%             end
+%         end
+%     end
+% 
+% 
+%     for  comb = nchoosek(1:8,2)
+%         
+% 
+%     end
+% 
+%     meshPoints=500;
+%     tol=10/meshPoints;
+%     x = linspace(-5,5,meshPoints);
+%     y = linspace(-5,5,meshPoints);
+% 
+%     [X,Y]=meshgrid(x,y);
+%     for i=1:length(x)
+%         for j = 1:length(y)
+%             Ve(i,j) = V(X(i,j),Y(i,j));
+%             De(i,j) = Dset(X(i,j),Y(i,j));
+%         end
+%     end
+% 
+%     %calculate b
+%     b=min([min(Ve(:,1)), min(Ve(:,end)), min(Ve(1,:)), min(Ve(end,:))])
+%     b=fix(b*1e2)/1e2;
+% 
+%     figure(1);
+%     [~,c]=contour(X,Y,Ve,linspace(0,b,5),'r','ShowText','on','DisplayName','V')
+%     hold on
+%     [~,d]=contour(X,Y,De,[0,fix(max(max(De))*1e2)/1e2],'b','ShowText','on','DisplayName','D')
+%     legend;
+%     %from the graph
+% %     l = 0.18;
+%     K = K;
 end
 end
 

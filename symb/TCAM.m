@@ -28,3 +28,4 @@ Dset = simplify(Dset);
 V/(sin(x(8))^2*(2*abs(gamma(2) - gamma(4)) + gamma(2)*sin(2*x(8)) - gamma(4)*sin(2*x(8)))) - Dset/(x(4)*(gamma(2)*cos(2*x(8)) - gamma(4)*cos(2*x(8)) - gamma(2)*(2*cos(2*x(8))^2 - 1) + gamma(4)*(2*cos(2*x(8))^2 - 1) + 2*sin(2*x(8))*abs(gamma(2) - gamma(4))))
 V/(sin(x(8))^2*(2*abs(gamma(2) - gamma(4)) + gamma(2)*sin(2*x(8)) - gamma(4)*sin(2*x(8))))
 Dset/(x(4)*(gamma(2)*cos(2*x(8)) - gamma(4)*cos(2*x(8)) - gamma(2)*(2*cos(2*x(8))^2 - 1) + gamma(4)*(2*cos(2*x(8))^2 - 1) + 2*sin(2*x(8))*abs(gamma(2) - gamma(4))))
+
