@@ -84,15 +84,32 @@ dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (128
 dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
 
 V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
+
 hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
 Dset = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x5,x7,psi]*hdot(x1,x2,x3,x4,x5,x6,x7,psi,k)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
 
 DV = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(j) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{j}(psi)*h{k}(psi)*(A{j}'*P{k}+P{k}*A{j})*[x1,x2,x3,x4,x5,x6,x7,psi]',G)),Rset));
-x0 = [0,0,0,0,0,0,0,0];
+x0 = 1.5*ones(8,1);
 A = [];
 b = [];
 Aeq = [];
 beq = [];
+lb = -1.5*ones(8,1);
+ub = 1.5*ones(8,1);
+
+options = optimoptions("fmincon",...
+    "Algorithm","interior-point",...
+    "EnableFeasibilityMode",true,...
+    "SubproblemAlgorithm","cg");
+
 % l = como achar l?
-nonlcon = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G)) - l;
+nonlcon = @borderofZ;
+V = @(x) sum(arrayfun(@(k) x'*h{k}(x(8))*P{k}*x,G));
+
+[x,fval,exitflag,output] = fmincon(V,x0,A,b,Aeq,beq,[],[],nonlcon,options);
+
+
 [x,fval,exitflag,output,lambda,grad,hessian] = fmincon(DV,x0,A,b,Aeq,beq,lb,ub,nonlcon);
+
+
+nonlcon = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G)) - l;
