@@ -10,7 +10,7 @@ VelYaw  = 4;
 PosX    = 5;
 PosY    = 6;
 PosZ    = 7;
-PosYaw  = 8;3
+PosYaw  = 8;
 global small_k 
 %% SYSTEM INIT AND SIM PARAMETERS
 sphinx = false; %flag for which gamma we use
