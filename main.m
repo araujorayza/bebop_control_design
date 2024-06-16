@@ -29,7 +29,7 @@ TRAJECTORY      = 'circle';
 % TRAJECTORY = 'LemniscataBernoulli';
 
 
-ControlType = 'CNMAC2023';
+ControlType = 'Sproc';
 % ControlType = 'WeiTeo1';
 % MozelliTeo6
 % SereniTeo2
