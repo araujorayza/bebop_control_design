@@ -974,13 +974,13 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
             R{j} = sdpvar(n,n,'full');
             L{j} = sdpvar(n,n,'full');
         end
-        sdpvar lambda
-
+        sdpvar l;
+        lambda = 1;
         for j=Rset
             for k=G
-               Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}',   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
-                                P{k}-L{k}'+R{k}*A{j},         -R{k}-R{k}',          zeros(n,1);
-                                zeros(1,n),                    zeros(1,n),          -lambda*l];
+               Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
+                                P{k}-L{k}'+R{k}*A{j},                       -R{k}-R{k}',          zeros(n,1);
+                                zeros(1,n),                                 zeros(1,n),          -lambda*l];
             end
         end
 
@@ -1005,7 +1005,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
             end
         end
 
-        LMIS = [LMIS, lambda >= 0];
+        LMIS = [LMIS, l >= 0];
 
     
         opts=sdpsettings;
@@ -1019,7 +1019,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
                 P{k} = double(P{k})
                 R{k} = double(R{k})
                 L{k} = double(L{k})
-                lambda = double(lambda)
+                l = double(l)
             end
         else
             display('Infeasible')
