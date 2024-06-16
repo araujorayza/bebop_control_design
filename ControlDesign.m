@@ -1025,5 +1025,24 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
             display('Infeasible')
             P=[];
         end
+        %trying to visualize V(x)
+        meshPoints=500;
+        tol=10/meshPoints;
+
+        PSI = linspace(-pi,pi,meshPoints);
+        lower_V=zeros(meshPoints,1);
+        upper_V=zeros(meshPoints,1);
+
+        i=1;
+        for psi = PSI
+            for k=G
+                lower_V(i)=h{k}(psi)*min(eig(P{k}))+lower_V(i)
+                upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i)
+            end
+            i=i+1;
+        end
+
+        plot(PSI,upper_V, PSI, lower_V)
+        legend('upperV','lowerV')
     end 
 end 
