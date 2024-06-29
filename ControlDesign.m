@@ -930,7 +930,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
     else
         Rset = 1:size(B,2);
         n = size(A{1},2);
-        G=[1,2];
+        G=[1,3];
         % K calculated using Mozelli
         K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
@@ -1012,7 +1012,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
         opts.solver='sedumi';
         opts.verbose=0;
     
-        sol = solvesdp(LMIS,[],opts);
+        sol = solvesdp(LMIS,-l,opts);
         p=min(checkset(LMIS));
         if p > 0
             for k = G
@@ -1025,6 +1025,28 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
             display('Infeasible')
             P=[];
         end
+        % Calculate b
+
+        for k = G
+            eig_min{k} = min(eig(P{k}))
+        end
+        % The model is valid for all R because the nonlinearities are
+        % globally bounded. I chose the min upper bound of model validity
+        % as +pi
+        min_x_top = pi;
+        
+        %Since h depends only on psi, we know which values of psi
+        %constute its min on the border of Z
+        for k = G
+            hmin_on_Z{k} = min([h{k}(-pi), h{k}(pi)])
+        end
+        %calc actual value of b
+        b = 0
+        for k=G
+            b = b + hmin_on_Z{k}*eig_min{k}*min_x_top
+        end   
+        
+
         %trying to visualize V(x)
         meshPoints=500;
         tol=10/meshPoints;
@@ -1032,7 +1054,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
         PSI = linspace(-pi,pi,meshPoints);
         lower_V=zeros(meshPoints,1);
         upper_V=zeros(meshPoints,1);
-
+        
         i=1;
         for psi = PSI
             for k=G
@@ -1044,5 +1066,18 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
 
         plot(PSI,upper_V, PSI, lower_V)
         legend('upperV','lowerV')
+        
+        %plot h
+        i=1;
+        for psi = PSI
+            h1(i)=h{1}(psi)
+            h3(i)=h{3}(psi)
+            i=i+1;
+        end
+        figure(2)
+        plot(PSI,h1, PSI, h3)
+        legend('h1','h3')
+        disp('pip')
+        
     end 
 end 
