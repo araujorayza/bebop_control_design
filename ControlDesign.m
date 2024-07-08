@@ -783,7 +783,7 @@ if Modeltype ~= 1
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G=[1,3];
+    G=[1,2];
     % K calculated using Mozelli
     K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
@@ -939,7 +939,7 @@ if Modeltype ~= 1
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G=[1,3];
+    G=[1,2];
     % K calculated using Mozelli
     K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
