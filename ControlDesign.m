@@ -782,7 +782,7 @@ if Modeltype ~= 1
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G=[1,2];
+    G=[1,3];
     % K calculated using Mozelli
     K{1} = [
     9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
@@ -854,59 +854,9 @@ else
         return;
     end
     % Calculate b
+    [b,lower_V,upper_V] =calc_b(G,h,P,pi);
+    
 
-        for k = G
-            eig_min{k} = min(eig(P{k}))
-        end
-        % The model is valid for all R because the nonlinearities are
-        % globally bounded. I chose the min upper bound of model validity
-        % as +pi
-        min_x_top = pi;
-        
-        %Since h depends only on psi, we know which values of psi
-        %constute its min on the border of Z
-        for k = G
-            hmin_on_Z{k} = min([h{k}(-pi), h{k}(pi)])
-        end
-        %calc actual value of b
-        b = 0
-        for k=G
-            b = b + hmin_on_Z{k}*eig_min{k}*min_x_top
-        end   
-        
-
-        %trying to visualize V(x)
-        meshPoints=500;
-        tol=10/meshPoints;
-
-        PSI = linspace(-pi,pi,meshPoints);
-        lower_V=zeros(meshPoints,1);
-        upper_V=zeros(meshPoints,1);
-        
-        i=1;
-        for psi = PSI
-            for k=G
-                lower_V(i)=h{k}(psi)*min(eig(P{k}))+lower_V(i)
-                upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i)
-            end
-            i=i+1;
-        end
-
-        plot(PSI,upper_V, PSI, lower_V)
-        legend('upperV','lowerV')
-        
-        %plot h
-        i=1;
-        for psi = PSI
-            h1(i)=h{1}(psi)
-            h3(i)=h{3}(psi)
-            i=i+1;
-        end
-        figure(2)
-        plot(PSI,h1, PSI, h3)
-        legend('h1','h3')
-        disp('pip')
-        
 %     % Set estimation
 %     V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
 %     hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
@@ -1137,3 +1087,63 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
         
     end 
 end 
+
+function [b,lower_V,upper_V] = calc_b(G,h,P,min_state_bound)
+% I knwo this works for model type 1
+
+% The model is valid for all R^n because the nonlinearities are
+% globally bounded. I chose the min upper bound of model validity
+% as +pi
+min_x_top = min_state_bound;
+
+%Find the min eigenvalue for every P
+for k = G
+        eig_min{k} = min(eig(P{k}));
+end
+
+%Since h depends only on psi, we know which values of psi
+%constute its min on the border of Z
+for k = G
+    hmin_on_Z{k} = min([h{k}(-pi), h{k}(pi)]);
+end
+
+%calc actual value of b
+b = 0;
+for k=G
+    b = b + hmin_on_Z{k}*eig_min{k}*min_x_top;
+end
+disp("b=")
+disp(b)
+
+%trying to visualize V(x)
+meshPoints=500;
+tol=10/meshPoints;
+
+PSI = linspace(-pi,pi,meshPoints);
+lower_V=zeros(meshPoints,1);
+upper_V=zeros(meshPoints,1);
+
+i=1;
+for psi = PSI
+    for k=G
+        lower_V(i)=h{k}(psi)*min(eig(P{k}))+lower_V(i);
+        upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i);
+    end
+    i=i+1;
+end
+
+plot(PSI,upper_V, PSI, lower_V)
+legend('upperV','lowerV')
+title('This is how the upper and lower bounds of V behave in Z')
+
+%Because h depends only on one variable, we can plot it
+i=1;
+for psi = PSI
+    h1(i)=h{1}(psi);
+    h3(i)=h{3}(psi);
+    i=i+1;
+end
+figure(2)
+plot(PSI,h1, PSI, h3)
+legend('h1','h3')
+end
