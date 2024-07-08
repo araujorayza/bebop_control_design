@@ -851,6 +851,7 @@ else
     else
         display('Infeasible')
         P=[];
+        return;
     end
 
 %     % Set estimation

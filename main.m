@@ -79,7 +79,7 @@ SimStruct.WindDisturbance.time=DisturbanceTime;
 
 %% CONTROL DESIGN
 ControlDesign
-
+return;
 %% TRAJECTORY PLANNING
 t=0:simStep:Tfinal;
 [q_d,dq_d,ddq_d]=CalcDesTrajectory(TRAJECTORY,t);
