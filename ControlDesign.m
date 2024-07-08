@@ -849,13 +849,13 @@ else
             L{k} = double(L{k})
         end
     else
-        display('Infeasible')
+        disp('Infeasible');
         P=[];
         return;
     end
     % Calculate b
-    [b,lower_V,upper_V] =calc_b(G,h,P,pi);
-    
+    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    plot_h(Rset,h,PSI);
 
 %     % Set estimation
 %     V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
@@ -1088,7 +1088,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
     end 
 end 
 
-function [b,lower_V,upper_V] = calc_b(G,h,P,min_state_bound)
+function [b,lower_V,upper_V,PSI] = calc_b(G,h,P,min_state_bound)
 % I knwo this works for model type 1
 
 % The model is valid for all R^n because the nonlinearities are
@@ -1116,6 +1116,7 @@ disp("b=")
 disp(b)
 
 %trying to visualize V(x)
+% so we decide to plot its upper and lower bounds
 meshPoints=500;
 tol=10/meshPoints;
 
@@ -1135,15 +1136,23 @@ end
 plot(PSI,upper_V, PSI, lower_V)
 legend('upperV','lowerV')
 title('This is how the upper and lower bounds of V behave in Z')
-
-%Because h depends only on one variable, we can plot it
-i=1;
-for psi = PSI
-    h1(i)=h{1}(psi);
-    h3(i)=h{3}(psi);
-    i=i+1;
 end
+
+function [h_value]=plot_h(Rset,h,PSI)
+%Because h depends only on one variable, we can plot it
+for j = Rset
+    for i=1:length(PSI)
+        psi=PSI(i);
+        h_value{j}(i)=h{j}(psi);
+    end
+end
+
+
 figure(2)
-plot(PSI,h1, PSI, h3)
-legend('h1','h3')
+hold on
+for j=Rset
+    plot(PSI,h_value{j},'DisplayName',strcat('h_',num2str(j)))
+end
+legend()
+grid on
 end
