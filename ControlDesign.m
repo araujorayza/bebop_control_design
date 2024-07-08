@@ -854,7 +854,11 @@ else
         return;
     end
     % Calculate b
+    % The model is valid for all R^n because the nonlinearities are
+    % globally bounded. I chose the min upper bound of model validity
+    % as +pi
     [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    %Plot hs
     plot_h(Rset,h,PSI);
 
 %     % Set estimation
@@ -1091,14 +1095,11 @@ end
 function [b,lower_V,upper_V,PSI] = calc_b(G,h,P,min_state_bound)
 % I knwo this works for model type 1
 
-% The model is valid for all R^n because the nonlinearities are
-% globally bounded. I chose the min upper bound of model validity
-% as +pi
 min_x_top = min_state_bound;
 
 %Find the min eigenvalue for every P
 for k = G
-        eig_min{k} = min(eig(P{k}));
+    eig_min{k} = min(eig(P{k}));
 end
 
 %Since h depends only on psi, we know which values of psi
@@ -1120,17 +1121,16 @@ disp(b)
 meshPoints=500;
 tol=10/meshPoints;
 
-PSI = linspace(-pi,pi,meshPoints);
+PSI = linspace(-min_state_bound,min_state_bound,meshPoints);
 lower_V=zeros(meshPoints,1);
 upper_V=zeros(meshPoints,1);
 
-i=1;
-for psi = PSI
+for i=1:length(PSI)
+    psi = PSI(i);
     for k=G
         lower_V(i)=h{k}(psi)*min(eig(P{k}))+lower_V(i);
         upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i);
     end
-    i=i+1;
 end
 
 plot(PSI,upper_V, PSI, lower_V)
