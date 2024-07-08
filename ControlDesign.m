@@ -141,7 +141,7 @@ else
     disp('LMIs Infactiveis')
 end
 end
-%%
+
 function K = LMI_Teo6MozelliMOD(A,B,fi,mu)
 % Esta fun��o encontra condi��es suficientes para o projeto de
 % controladores fuzzy, considerando realimenta��o de estados.
@@ -205,7 +205,7 @@ else
     error('LMIs Infactiveis')
 end
 end
-%%
+
 function L = SereniTeo2(A,B,C,gamma)
 N = size(A,2);
 nA = size(A{1,1},2);
@@ -267,7 +267,7 @@ else
     error('nao funcionou')
 end
 end
-%%
+
 function K = Quadratic(A,B,beta)
 N = size(A,2);
 nA = size(A{1,1},2);
@@ -293,7 +293,8 @@ else
     error('quadratico nao funcionou')
 end
 end
-%%
+
+
 function L = SereniTeo2_Ulim(A,B,C,gamma,ro,xb)
 N = size(A,2);
 nA = size(A{1,1},2);
@@ -785,25 +786,25 @@ else
     G=[1,3];
     % K calculated using Mozelli
     K{1} = [
-    9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
-   -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
-    0.0000   -0.0000   -1.2490    0.0000    0.0000   -0.0000    0.9293    0.0000
-   -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294]
+        9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
+        -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
+        0.0000   -0.0000   -1.2490    0.0000    0.0000   -0.0000    0.9293    0.0000
+        -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294]
     K{2} = [
-    9.9989    0.2241   -0.0000    0.0000    1.5032    0.0001    0.0000    0.0000
-    0.2241    9.7748   -0.0000    0.0000   -0.0001    1.5031   -0.0000    0.0000
-    0.0000    0.0000   -1.2602    0.0000    0.0000    0.0000    0.9281    0.0000
-   -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282]
-   K{3} = [
-    9.7747   -0.2241   -0.0000    0.0000    1.5024    0.0001    0.0000    0.0000
-   -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
-    0.0000   -0.0000   -1.2757    0.0000    0.0000   -0.0000    0.9263    0.0000
-   -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265]
-   K{4} = [
-    9.7746    0.2241   -0.0000    0.0000    1.5009    0.0001    0.0000    0.0000
-    0.2241    9.9987   -0.0000   -0.0000   -0.0001    1.5007   -0.0000    0.0000
-    0.0000    0.0000   -1.2991    0.0000    0.0000    0.0000    0.9234    0.0000
-   -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236]
+        9.9989    0.2241   -0.0000    0.0000    1.5032    0.0001    0.0000    0.0000
+        0.2241    9.7748   -0.0000    0.0000   -0.0001    1.5031   -0.0000    0.0000
+        0.0000    0.0000   -1.2602    0.0000    0.0000    0.0000    0.9281    0.0000
+        -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282]
+    K{3} = [
+        9.7747   -0.2241   -0.0000    0.0000    1.5024    0.0001    0.0000    0.0000
+        -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
+        0.0000   -0.0000   -1.2757    0.0000    0.0000   -0.0000    0.9263    0.0000
+        -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265]
+    K{4} = [
+        9.7746    0.2241   -0.0000    0.0000    1.5009    0.0001    0.0000    0.0000
+        0.2241    9.9987   -0.0000   -0.0000   -0.0001    1.5007   -0.0000    0.0000
+        0.0000    0.0000   -1.2991    0.0000    0.0000    0.0000    0.9234    0.0000
+        -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236]
     for j = Rset
         A{j} = A{j}+B{j}*K{j};
     end
@@ -816,8 +817,8 @@ else
     dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, - (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
     dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
     dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
- 
-   
+
+
 
     %LMI calculations
     LMIS=[];
@@ -861,236 +862,189 @@ else
     %Plot hs
     plot_h(Rset,h,PSI);
 
-%     % Set estimation
-%     V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
-%     hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
-%     Dset = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x5,x7,psi]*hdot(x1,x2,x3,x4,x5,x6,x7,psi,k)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
-% 
-%     %calculate V and D
-%     meshPoints=500;
-%     tol=10/meshPoints;
-%     x1 = linspace(-5,5,meshPoints);
-%     x2 = linspace(-5,5,meshPoints);
-%     x3 = linspace(-5,5,meshPoints);
-%     x4 = linspace(-5,5,meshPoints);
-%     x5 = linspace(-5,5,meshPoints);
-%     x6 = linspace(-5,5,meshPoints);
-%     x7 = linspace(-5,5,meshPoints);
-%     psi = linspace(-pi,pi,meshPoints);
-%     %Ve=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
-%     %De=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
-%     for X1=1:length(x1)
-%         for X2=1:length(x2)
-%             for X3=1:length(x3)
-%                 for X4=1:length(x4)
-%                     for X5=1:length(x5)
-%                         for X6=1:length(x6)
-%                             for X7=1:length(x7)
-%                                 for X8=1:length(psi)
-%                                     Ve(X1,X2,X3,X4,X5,X6,X7,X8) = V(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
-%                                     De(X1,X2,X3,X4,X5,X6,X7,X8) = Dset(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
-%                                 end
-%                             end
-%                         end
-%                     end
-%                 end
-%             end
-%         end
-%     end
-% 
-% 
-%     for  comb = nchoosek(1:8,2)
-%         
-% 
-%     end
-% 
-%     meshPoints=500;
-%     tol=10/meshPoints;
-%     x = linspace(-5,5,meshPoints);
-%     y = linspace(-5,5,meshPoints);
-% 
-%     [X,Y]=meshgrid(x,y);
-%     for i=1:length(x)
-%         for j = 1:length(y)
-%             Ve(i,j) = V(X(i,j),Y(i,j));
-%             De(i,j) = Dset(X(i,j),Y(i,j));
-%         end
-%     end
-% 
-%     %calculate b
-%     b=min([min(Ve(:,1)), min(Ve(:,end)), min(Ve(1,:)), min(Ve(end,:))])
-%     b=fix(b*1e2)/1e2;
-% 
-%     figure(1);
-%     [~,c]=contour(X,Y,Ve,linspace(0,b,5),'r','ShowText','on','DisplayName','V')
-%     hold on
-%     [~,d]=contour(X,Y,De,[0,fix(max(max(De))*1e2)/1e2],'b','ShowText','on','DisplayName','D')
-%     legend;
-%     %from the graph
-% %     l = 0.18;
-%     K = K;
+    %     % Set estimation
+    %     V = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x6,x7,psi]*h{k}(psi)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
+    %     hdot = @(x1,x2,x3,x4,x5,x6,x7,psi,k) sum(arrayfun(@(j) dh{k}(psi)*h{j}(psi)*A{j}*[x1,x2,x3,x4,x5,x6,x7,psi]',Rset));
+    %     Dset = @(x1,x2,x3,x4,x5,x6,x7,psi) sum(arrayfun(@(k) [x1,x2,x3,x4,x5,x5,x7,psi]*hdot(x1,x2,x3,x4,x5,x6,x7,psi,k)*P{k}*[x1,x2,x3,x4,x5,x6,x7,psi]',G));
+    %
+    %     %calculate V and D
+    %     meshPoints=500;
+    %     tol=10/meshPoints;
+    %     x1 = linspace(-5,5,meshPoints);
+    %     x2 = linspace(-5,5,meshPoints);
+    %     x3 = linspace(-5,5,meshPoints);
+    %     x4 = linspace(-5,5,meshPoints);
+    %     x5 = linspace(-5,5,meshPoints);
+    %     x6 = linspace(-5,5,meshPoints);
+    %     x7 = linspace(-5,5,meshPoints);
+    %     psi = linspace(-pi,pi,meshPoints);
+    %     %Ve=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
+    %     %De=zeros(length(x1),length(x2),length(x3),length(x4),length(x5),length(x6),length(x7),length(psi));
+    %     for X1=1:length(x1)
+    %         for X2=1:length(x2)
+    %             for X3=1:length(x3)
+    %                 for X4=1:length(x4)
+    %                     for X5=1:length(x5)
+    %                         for X6=1:length(x6)
+    %                             for X7=1:length(x7)
+    %                                 for X8=1:length(psi)
+    %                                     Ve(X1,X2,X3,X4,X5,X6,X7,X8) = V(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
+    %                                     De(X1,X2,X3,X4,X5,X6,X7,X8) = Dset(x1(X1),x2(X2),x3(X3),x4(X4),x5(X5),x6(X6),x7(X7),psi(X8));
+    %                                 end
+    %                             end
+    %                         end
+    %                     end
+    %                 end
+    %             end
+    %         end
+    %     end
+    %
+    %
+    %     for  comb = nchoosek(1:8,2)
+    %
+    %
+    %     end
+    %
+    %     meshPoints=500;
+    %     tol=10/meshPoints;
+    %     x = linspace(-5,5,meshPoints);
+    %     y = linspace(-5,5,meshPoints);
+    %
+    %     [X,Y]=meshgrid(x,y);
+    %     for i=1:length(x)
+    %         for j = 1:length(y)
+    %             Ve(i,j) = V(X(i,j),Y(i,j));
+    %             De(i,j) = Dset(X(i,j),Y(i,j));
+    %         end
+    %     end
+    %
+    %     %calculate b
+    %     b=min([min(Ve(:,1)), min(Ve(:,end)), min(Ve(1,:)), min(Ve(end,:))])
+    %     b=fix(b*1e2)/1e2;
+    %
+    %     figure(1);
+    %     [~,c]=contour(X,Y,Ve,linspace(0,b,5),'r','ShowText','on','DisplayName','V')
+    %     hold on
+    %     [~,d]=contour(X,Y,De,[0,fix(max(max(De))*1e2)/1e2],'b','ShowText','on','DisplayName','D')
+    %     legend;
+    %     %from the graph
+    % %     l = 0.18;
+    %     K = K;
 end
 end
 
 function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
-    if Modeltype ~= 1
-        K = []
-    else
-        Rset = 1:size(B,2);
-        n = size(A{1},2);
-        G=[1,3];
-        % K calculated using Mozelli
-        K{1} = [
+if Modeltype ~= 1
+    K = []
+else
+    Rset = 1:size(B,2);
+    n = size(A{1},2);
+    G=[1,3];
+    % K calculated using Mozelli
+    K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
-       -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
+        -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
         0.0000   -0.0000   -1.2490    0.0000    0.0000   -0.0000    0.9293    0.0000
-       -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294];
-        K{2} = [
+        -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294];
+    K{2} = [
         9.9989    0.2241   -0.0000    0.0000    1.5032    0.0001    0.0000    0.0000
         0.2241    9.7748   -0.0000    0.0000   -0.0001    1.5031   -0.0000    0.0000
         0.0000    0.0000   -1.2602    0.0000    0.0000    0.0000    0.9281    0.0000
-       -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282];
-       K{3} = [
+        -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282];
+    K{3} = [
         9.7747   -0.2241   -0.0000    0.0000    1.5024    0.0001    0.0000    0.0000
-       -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
+        -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
         0.0000   -0.0000   -1.2757    0.0000    0.0000   -0.0000    0.9263    0.0000
-       -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265];
-       K{4} = [
+        -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265];
+    K{4} = [
         9.7746    0.2241   -0.0000    0.0000    1.5009    0.0001    0.0000    0.0000
         0.2241    9.9987   -0.0000   -0.0000   -0.0001    1.5007   -0.0000    0.0000
         0.0000    0.0000   -1.2991    0.0000    0.0000    0.0000    0.9234    0.0000
-       -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236];
-        
-       for j = Rset
-            A{j} = A{j}+B{j}*K{j};
-        end
-        
-        h{1} = @(psi) (sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-        h{2} = @(psi) -(sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-        h{3} = @(psi) -(sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
-        h{4} = @(psi) (sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
-    
-        dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,(cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-        dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, - (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
-        dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-        dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
-     
-        %LMI calculations
-        LMIS=[];
-        for j=G
-            P{j} = sdpvar(n,n,'symmetric');
-            R{j} = sdpvar(n,n,'full');
-            L{j} = sdpvar(n,n,'full');
-        end
-%         sdpvar l;
-        l=0.1;
-        lambda = 0.5;
-        for j=Rset
-            for k=G
-               Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
-                                P{k}-L{k}'+R{k}*A{j},                       -R{k}-R{k}',          zeros(n,1);
-                                zeros(1,n),                                 zeros(1,n),          -lambda*l];
-            end
-        end
+        -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236];
 
-        % Less conservative LMIs
+    for j = Rset
+        A{j} = A{j}+B{j}*K{j};
+    end
+
+    h{1} = @(psi) (sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
+    h{2} = @(psi) -(sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
+    h{3} = @(psi) -(sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
+    h{4} = @(psi) (sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
+
+    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,(cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
+    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, - (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
+    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
+    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
+
+    %LMI calculations
+    LMIS=[];
+    for j=G
+        P{j} = sdpvar(n,n,'symmetric');
+        R{j} = sdpvar(n,n,'full');
+        L{j} = sdpvar(n,n,'full');
+    end
+    %         sdpvar l;
+    l=0.1;
+    lambda = 0.5;
+    for j=Rset
         for k=G
-            LMIS = [LMIS, Upsilon{k,k} <= 0];
+            Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
+                P{k}-L{k}'+R{k}*A{j},                       -R{k}-R{k}',          zeros(n,1);
+                zeros(1,n),                                 zeros(1,n),          -lambda*l];
         end
+    end
 
-        for j=G
-            for k=G
-                if(k~=j)
-                    LMIS = [LMIS, Upsilon{k,j}+Upsilon{j,k} <= 0];
-                end
-            end
-        end
+    % Less conservative LMIs
+    for k=G
+        LMIS = [LMIS, Upsilon{k,k} <= 0];
+    end
 
-        for j=setdiff(Rset,G)
-            for k=G
-                if(k~=j)
-                    LMIS = [LMIS, Upsilon{k,j} <= 0];
-                end
-            end
-        end
-
-        LMIS = [LMIS, l >= 0];
-
-    
-        opts=sdpsettings;
-        opts.solver='sedumi';
-        opts.verbose=0;
-    
-        sol = solvesdp(LMIS,-l,opts);
-        p=min(checkset(LMIS));
-        if p > 0
-            for k = G
-                P{k} = double(P{k})
-                R{k} = double(R{k})
-                L{k} = double(L{k})
-                l = double(l)
-            end
-        else
-            disp('Infeasible');
-            P=[];
-            return;
-        end
-        % Calculate b
-
-        for k = G
-            eig_min{k} = min(eig(P{k}))
-        end
-        % The model is valid for all R because the nonlinearities are
-        % globally bounded. I chose the min upper bound of model validity
-        % as +pi
-        min_x_top = pi;
-        
-        %Since h depends only on psi, we know which values of psi
-        %constute its min on the border of Z
-        for k = G
-            hmin_on_Z{k} = min([h{k}(-pi), h{k}(pi)])
-        end
-        %calc actual value of b
-        b = 0
+    for j=G
         for k=G
-            b = b + hmin_on_Z{k}*eig_min{k}*min_x_top
-        end   
-        
-
-        %trying to visualize V(x)
-        meshPoints=500;
-        tol=10/meshPoints;
-
-        PSI = linspace(-pi,pi,meshPoints);
-        lower_V=zeros(meshPoints,1);
-        upper_V=zeros(meshPoints,1);
-        
-        i=1;
-        for psi = PSI
-            for k=G
-                lower_V(i)=h{k}(psi)*min(eig(P{k}))+lower_V(i)
-                upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i)
+            if(k~=j)
+                LMIS = [LMIS, Upsilon{k,j}+Upsilon{j,k} <= 0];
             end
-            i=i+1;
         end
+    end
 
-        plot(PSI,upper_V, PSI, lower_V)
-        legend('upperV','lowerV')
-        
-        %plot h
-        i=1;
-        for psi = PSI
-            h1(i)=h{1}(psi)
-            h3(i)=h{3}(psi)
-            i=i+1;
+    for j=setdiff(Rset,G)
+        for k=G
+            if(k~=j)
+                LMIS = [LMIS, Upsilon{k,j} <= 0];
+            end
         end
-        figure(2)
-        plot(PSI,h1, PSI, h3)
-        legend('h1','h3')
-        disp('pip')
-        
-    end 
-end 
+    end
+
+    LMIS = [LMIS, l >= 0];
+
+
+    opts=sdpsettings;
+    opts.solver='sedumi';
+    opts.verbose=0;
+
+    sol = solvesdp(LMIS,-l,opts);
+    p=min(checkset(LMIS));
+    if p > 0
+        for k = G
+            P{k} = double(P{k})
+            R{k} = double(R{k})
+            L{k} = double(L{k})
+            l = double(l)
+        end
+    else
+        disp('Infeasible');
+        P=[];
+        return;
+    end
+    % Calculate b
+    % The model is valid for all R^n because the nonlinearities are
+    % globally bounded. I chose the min upper bound of model validity
+    % as +pi
+    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    %Plot hs
+    plot_h(Rset,h,PSI);
+end
+end
 
 function [b,lower_V,upper_V,PSI] = calc_b(G,h,P,min_state_bound)
 % I knwo this works for model type 1
