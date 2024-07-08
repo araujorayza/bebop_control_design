@@ -1132,7 +1132,7 @@ for i=1:length(PSI)
         upper_V(i)=h{k}(psi)*max(eig(P{k}))+upper_V(i);
     end
 end
-
+figure;
 plot(PSI,upper_V, PSI, lower_V)
 legend('upperV','lowerV')
 title('This is how the upper and lower bounds of V behave in Z')
@@ -1140,7 +1140,9 @@ end
 
 function [h_value]=plot_h(Rset,h,PSI)
 %Because h depends only on one variable, we can plot it
+h_value = cell(length(Rset),1);
 for j = Rset
+    h_value{j} = zeros(1,length(PSI));
     for i=1:length(PSI)
         psi=PSI(i);
         h_value{j}(i)=h{j}(psi);
@@ -1148,7 +1150,7 @@ for j = Rset
 end
 
 
-figure(2)
+figure;
 hold on
 for j=Rset
     plot(PSI,h_value{j},'DisplayName',strcat('h_',num2str(j)))
