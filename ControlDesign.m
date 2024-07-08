@@ -974,8 +974,9 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
             R{j} = sdpvar(n,n,'full');
             L{j} = sdpvar(n,n,'full');
         end
-        sdpvar l;
-        lambda = 1;
+%         sdpvar l;
+        l=0.1;
+        lambda = 0.5;
         for j=Rset
             for k=G
                Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
@@ -1024,6 +1025,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
         else
             display('Infeasible')
             P=[];
+            return;
         end
         % Calculate b
 
