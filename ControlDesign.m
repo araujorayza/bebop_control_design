@@ -1031,7 +1031,7 @@ function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
                 l = double(l)
             end
         else
-            display('Infeasible')
+            disp('Infeasible');
             P=[];
             return;
         end
