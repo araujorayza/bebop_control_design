@@ -783,7 +783,7 @@ if Modeltype ~= 1
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G=[1,2];
+    G=[1,2,3,4];
     % K calculated using Mozelli
     K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
@@ -1040,7 +1040,7 @@ else
     % The model is valid for all R^n because the nonlinearities are
     % globally bounded. I chose the min upper bound of model validity
     % as +pi
-    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi/3);
     %Plot hs
     plot_h(Rset,h,PSI);
 end
@@ -1065,7 +1065,7 @@ end
 %calc actual value of b
 b = 0;
 for k=G
-    b = b + hmin_on_Z{k}*eig_min{k}*min_x_top;
+    b = b + hmin_on_Z{k}*eig_min{k}*min_x_top^2;
 end
 disp("b=")
 disp(b)
