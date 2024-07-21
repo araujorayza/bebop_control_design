@@ -984,8 +984,8 @@ else
         L{j} = sdpvar(n,n,'full');
     end
     %         sdpvar l;
-    l=0.1;
-    lambda = 0.5;
+    l = 0.1;
+    lambda = 3;
     for j=Rset
         for k=G
             Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
@@ -1015,7 +1015,7 @@ else
         end
     end
 
-    LMIS = [LMIS, l >= 0];
+    LMIS = [LMIS, l >= 0, lambda>= 0];
 
 
     opts=sdpsettings;
@@ -1059,7 +1059,7 @@ end
 %Since h depends only on psi, we know which values of psi
 %constute its min on the border of Z
 for k = G
-    hmin_on_Z{k} = min([h{k}(-pi), h{k}(pi)]);
+    hmin_on_Z{k} = min([h{k}(-min_x_top), h{k}(min_x_top)]);
 end
 
 %calc actual value of b
