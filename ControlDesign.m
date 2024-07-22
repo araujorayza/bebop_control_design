@@ -831,7 +831,7 @@ else
     for j=Rset
         for k=G
             Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}',   (P{k}-L{k}'+R{k}*A{j})';
-                P{k}-L{k}'+R{k}*A{j},        -R{k}-R{k}'];
+                            P{k}-L{k}'+R{k}*A{j},        -R{k}-R{k}'];
             LMIS = [LMIS, Upsilon{k,j} <= 0];
         end
     end
@@ -858,7 +858,7 @@ else
     % The model is valid for all R^n because the nonlinearities are
     % globally bounded. I chose the min upper bound of model validity
     % as +pi
-    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi); %this needs to be updated
     %Plot hs
     plot_h(Rset,h,PSI);
 
@@ -966,15 +966,15 @@ else
         A{j} = A{j}-B{j}*K{j};
     end
 
-    h{1} = @(psi) (sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-    h{2} = @(psi) -(sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-    h{3} = @(psi) -(sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
-    h{4} = @(psi) (sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
+        h{1} = @(psi) -(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
+    h{2} = @(psi) (cos(psi)^2*(sin(2*psi)/2 + 1))/2;
+    h{3} = @(psi) -sin(psi)^2*(sin(2*psi)/4 - 1/2);
+    h{4} = @(psi) sin(psi)^2*(sin(2*psi)/4 + 1/2);
 
-    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,(cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, - (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
-    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
+    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,-(cos(psi)*(cos(3*psi) + 2*sin(psi)))/2];
+    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(psi)*(cos(3*psi) - 2*sin(psi)))/2];
+    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 - (5*cos(psi)^2)/2 + 2*cos(psi)^4 + 1/2];
+    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 + (5*cos(psi)^2)/2 - 2*cos(psi)^4 - 1/2];
 
     %LMI calculations
     LMIS=[];
@@ -989,8 +989,8 @@ else
     for j=Rset
         for k=G
             Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
-                P{k}-L{k}'+R{k}*A{j},                       -R{k}-R{k}',          zeros(n,1);
-                zeros(1,n),                                 zeros(1,n),          -lambda*l];
+                            P{k}-L{k}'+R{k}*A{j},                       -R{k}-R{k}',          zeros(n,1);
+                            zeros(1,n),                                 zeros(1,n),          -lambda*l];
         end
     end
 
