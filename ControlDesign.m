@@ -808,15 +808,15 @@ else
     for j = Rset
         A{j} = A{j}-B{j}*K{j};
     end
-    h{1} = @(psi) (sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-    h{2} = @(psi) -(sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747);
-    h{3} = @(psi) -(sin(2*psi)/4 - 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
-    h{4} = @(psi) (sin(2*psi)/4 + 1/2)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747);
+    h{1} = @(psi) -(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
+    h{2} = @(psi) (cos(psi)^2*(sin(2*psi)/2 + 1))/2;
+    h{3} = @(psi) -sin(psi)^2*(sin(2*psi)/4 - 1/2);
+    h{4} = @(psi) sin(psi)^2*(sin(2*psi)/4 + 1/2);
 
-    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,(cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, - (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 1285/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
-    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0,- (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 - 2*cos(psi)*sin(psi)*(sin(2*psi)/4 - 1/2)];
-    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(2*psi)*((538*cos(psi)^2)/747 + (1285*sin(psi)^2)/747 - 538/747))/2 + 2*cos(psi)*sin(psi)*(sin(2*psi)/4 + 1/2)];
+    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,-(cos(psi)*(cos(3*psi) + 2*sin(psi)))/2];
+    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(psi)*(cos(3*psi) - 2*sin(psi)))/2];
+    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 - (5*cos(psi)^2)/2 + 2*cos(psi)^4 + 1/2];
+    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 + (5*cos(psi)^2)/2 - 2*cos(psi)^4 - 1/2];
 
 
 
