@@ -1,24 +1,47 @@
 clc
 clear all
+close all
 
 syms psi dpsi
+assume(psi,'real');
+assumeAlso(dpsi,'real');
 
-h = {-(cos(psi)^2*(sin(2*psi)/2 - 1))/2
-    (cos(psi)^2*(sin(2*psi)/2 + 1))/2
-    -sin(psi)^2*(sin(2*psi)/4 - 1/2)
-    sin(psi)^2*(sin(2*psi)/4 + 1/2)}
+G=[1,2];
+max_psi=2*pi;
+
+h = {-(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
+    (cos(psi)^2*(sin(2*psi)/2 + 1))/2;
+    -sin(psi)^2*(sin(2*psi)/4 - 1/2);
+    sin(psi)^2*(sin(2*psi)/4 + 1/2)};
+
+P{1} = [-1   0
+        0   2];
+
+P{2} = [-2   0
+        0   3];
+
+P{3} = [3   0
+        0   -3];
+
+P{4} = [4   -1
+        -1   -4];
 
 
-P{1} = [2.0344   -0.6261
-    -0.6261   0.5365]
+Ph=0*h{1}*P{1};
+for k=G
+    Ph=Ph+h{k}*P{k};
+    disp('eigP')
+    disp(eig(P{k}))
+end
 
-P{3} = [2.0437   -0.6230
-    -0.6230   0.5400]
-
-V = [dpsi psi]*(h{1}*P{1}+h{3}*P{3})*[dpsi;psi]
+V = [dpsi psi]*Ph*[dpsi;psi];
 V = simplify(V)
 
-fcontour(V,[-2*pi 2*pi -2*pi 2*pi])
+handle=fcontour(V,[-max_psi max_psi -max_psi max_psi],'MeshDensity',100, 'LevelList', [-1 0 1 2 3 4 5]);
+grid on;
+
+H=hessian(V,[dpsi psi]);
+H=simplify(H);
 
 %Because the h functions depend only on psi, the contour sets are not
 %bounded

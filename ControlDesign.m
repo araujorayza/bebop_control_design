@@ -1,7 +1,7 @@
 %Script to calculate the controlller gains for the bebop quadrotor
 %mostly based on various T-S Fuzzy models
 [A,B,h,C] = ErrorModeling(Modeltype,gamma)
-
+save('drone_sys_data','A','B','h','gamma');
 switch ControlType
     case 'openloop'
         K = zeros(4);
@@ -789,22 +789,22 @@ else
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
         -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
         0.0000   -0.0000   -1.2490    0.0000    0.0000   -0.0000    0.9293    0.0000
-        -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294]
+        -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294];
     K{2} = [
         9.9989    0.2241   -0.0000    0.0000    1.5032    0.0001    0.0000    0.0000
         0.2241    9.7748   -0.0000    0.0000   -0.0001    1.5031   -0.0000    0.0000
         0.0000    0.0000   -1.2602    0.0000    0.0000    0.0000    0.9281    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282]
+        -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282];
     K{3} = [
         9.7747   -0.2241   -0.0000    0.0000    1.5024    0.0001    0.0000    0.0000
         -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
         0.0000   -0.0000   -1.2757    0.0000    0.0000   -0.0000    0.9263    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265]
+        -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265];
     K{4} = [
         9.7746    0.2241   -0.0000    0.0000    1.5009    0.0001    0.0000    0.0000
         0.2241    9.9987   -0.0000   -0.0000   -0.0001    1.5007   -0.0000    0.0000
         0.0000    0.0000   -1.2991    0.0000    0.0000    0.0000    0.9234    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236]
+        -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236];
     for j = Rset
         A{j} = A{j}-B{j}*K{j};
     end
@@ -933,13 +933,14 @@ else
 end
 end
 
+%%
 function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
 if Modeltype ~= 1
     K = []
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G=[1,2];
+    G = [1,2];
     % K calculated using Mozelli
     K{1} = [
         9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
@@ -966,7 +967,7 @@ else
         A{j} = A{j}-B{j}*K{j};
     end
 
-        h{1} = @(psi) -(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
+    h{1} = @(psi) -(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
     h{2} = @(psi) (cos(psi)^2*(sin(2*psi)/2 + 1))/2;
     h{3} = @(psi) -sin(psi)^2*(sin(2*psi)/4 - 1/2);
     h{4} = @(psi) sin(psi)^2*(sin(2*psi)/4 + 1/2);
@@ -985,7 +986,7 @@ else
     end
     %         sdpvar l;
     l = 0.1;
-    lambda = 3;
+    lambda = 1;
     for j=Rset
         for k=G
             Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+ lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})',    zeros(n,1);
@@ -1009,9 +1010,9 @@ else
 
     for j=setdiff(Rset,G)
         for k=G
-            if(k~=j)
+%             if(k~=j)
                 LMIS = [LMIS, Upsilon{k,j} <= 0];
-            end
+%             end
         end
     end
 
@@ -1022,7 +1023,7 @@ else
     opts.solver='sedumi';
     opts.verbose=0;
 
-    sol = solvesdp(LMIS,-l,opts);
+    sol = solvesdp(LMIS,[],opts);
     p=min(checkset(LMIS));
     if p > 0
         for k = G
@@ -1040,9 +1041,10 @@ else
     % The model is valid for all R^n because the nonlinearities are
     % globally bounded. I chose the min upper bound of model validity
     % as +pi
-    [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi/3);
+%     [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
     %Plot hs
-    plot_h(Rset,h,PSI);
+%     plot_h(Rset,h,PSI);
+    save('drone_sys_data','-append','P','G','l','lambda');
 end
 end
 
@@ -1090,6 +1092,7 @@ figure;
 plot(PSI,upper_V, PSI, lower_V)
 legend('upperV','lowerV')
 title('This is how the upper and lower bounds of V behave in Z')
+grid on;
 end
 
 function [h_value]=plot_h(Rset,h,PSI)
