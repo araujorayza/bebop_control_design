@@ -985,7 +985,7 @@ else
         L{j} = sdpvar(n,n,'full');
     end
     %         sdpvar l;
-    l = 0.1;
+    l = 0.3;
     lambda = 1;
     for j=Rset
         for k=G
