@@ -28,7 +28,7 @@ function [c,ceq] = borderofZ(x,ub,lb)
                 prod(arrayfun(@(num) x(num)-ub(num),1:length(ub)));
 end
 
-options = optimoptions('fmincon','Display','iter','Algorithm','sqp');
-
+options = optimoptions('fmincon','Display','iter','Algorithm','interior-point');
+x0=lb;
 [x,fval,exitflag,output,lambda,grad,hessian] = ...
-    fmincon(V,lb,[],[],[],[],lb,ub,@(x) borderofZ(x,ub,lb),options)
+    fmincon(V,x0,[],[],[],[],lb,ub,@(x) borderofZ(x,ub,lb),options)
