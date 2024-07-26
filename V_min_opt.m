@@ -29,6 +29,7 @@ function [c,ceq] = borderofZ(x,ub,lb)
 end
 
 options = optimoptions('fmincon','Display','iter','Algorithm','interior-point');
-x0=lb;
+x0=[1.0000	-1.0000	-0.0000	-0.0002	0.3344	-0.4095	-0.0000	0.0006]';
+x0=ub;
 [x,fval,exitflag,output,lambda,grad,hessian] = ...
     fmincon(V,x0,[],[],[],[],lb,ub,@(x) borderofZ(x,ub,lb),options)
