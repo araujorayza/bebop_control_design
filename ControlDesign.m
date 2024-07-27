@@ -8,7 +8,7 @@ switch ControlType
         disp('Virtual controller set to open loop');
 
     case 'MozelliTeo6'
-        fi=0.01*ones(size(A,2));
+        fi=0.5*ones(size(A,2));
         mu=0.1;
 
         if(Modeltype == 2)
@@ -53,7 +53,14 @@ switch ControlType
         [K,P,R,L,A,G,Rset] = CNMAC2023(Modeltype,A,B);
         ControlType = 'PDC';
     case 'Sproc'
-        [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B);
+        fi=0.5*ones(size(A,2));
+        mu=0.1;
+        if(Modeltype == 2)
+            K = LMI_Teo6MozelliMOD(A,B,fi,mu);
+        else
+            K = LMI_Teo6Mozelli(A,B,fi,mu);
+        end
+        [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B,K);
         ControlType = 'PDC';
     otherwise
         K=[];
@@ -934,48 +941,17 @@ end
 end
 
 %%
-function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B)
+function [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B,K)
 if Modeltype ~= 1
     K = []
 else
     Rset = 1:size(B,2);
     n = size(A{1},2);
-    G = [1,2];
-    % K calculated using Mozelli
-    K{1} = [
-        9.9990   -0.2241   -0.0000    0.0000    1.5038    0.0001    0.0000    0.0000
-        -0.2241    9.7749   -0.0000    0.0000   -0.0001    1.5037   -0.0000    0.0000
-        0.0000   -0.0000   -1.2490    0.0000    0.0000   -0.0000    0.9293    0.0000
-        -0.0000   -0.0000   -0.0000   -1.4983   -0.0000   -0.0000   -0.0000    0.9294];
-    K{2} = [
-        9.9989    0.2241   -0.0000    0.0000    1.5032    0.0001    0.0000    0.0000
-        0.2241    9.7748   -0.0000    0.0000   -0.0001    1.5031   -0.0000    0.0000
-        0.0000    0.0000   -1.2602    0.0000    0.0000    0.0000    0.9281    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5095   -0.0000   -0.0000   -0.0000    0.9282];
-    K{3} = [
-        9.7747   -0.2241   -0.0000    0.0000    1.5024    0.0001    0.0000    0.0000
-        -0.2241    9.9988    0.0000   -0.0000   -0.0001    1.5023   -0.0000    0.0000
-        0.0000   -0.0000   -1.2757    0.0000    0.0000   -0.0000    0.9263    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5250   -0.0000   -0.0000   -0.0000    0.9265];
-    K{4} = [
-        9.7746    0.2241   -0.0000    0.0000    1.5009    0.0001    0.0000    0.0000
-        0.2241    9.9987   -0.0000   -0.0000   -0.0001    1.5007   -0.0000    0.0000
-        0.0000    0.0000   -1.2991    0.0000    0.0000    0.0000    0.9234    0.0000
-        -0.0000   -0.0000   -0.0000   -1.5483   -0.0000   -0.0000   -0.0000    0.9236];
+    G = [1,2,3,4];
 
     for j = Rset
         A{j} = A{j}-B{j}*K{j};
     end
-
-    h{1} = @(psi) -(cos(psi)^2*(sin(2*psi)/2 - 1))/2;
-    h{2} = @(psi) (cos(psi)^2*(sin(2*psi)/2 + 1))/2;
-    h{3} = @(psi) -sin(psi)^2*(sin(2*psi)/4 - 1/2);
-    h{4} = @(psi) sin(psi)^2*(sin(2*psi)/4 + 1/2);
-
-    dh{1} = @(psi) [ 0, 0, 0, 0, 0, 0, 0,-(cos(psi)*(cos(3*psi) + 2*sin(psi)))/2];
-    dh{2} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, (cos(psi)*(cos(3*psi) - 2*sin(psi)))/2];
-    dh{3} = @(psi) [  0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 - (5*cos(psi)^2)/2 + 2*cos(psi)^4 + 1/2];
-    dh{4} = @(psi) [ 0, 0, 0, 0, 0, 0, 0, sin(2*psi)/2 + (5*cos(psi)^2)/2 - 2*cos(psi)^4 - 1/2];
 
     %LMI calculations
     LMIS=[];
@@ -985,7 +961,7 @@ else
         L{j} = sdpvar(n,n,'full');
     end
     %         sdpvar l;
-    l = 0.3;
+    l = 0.3; 
     lambda = 1;
     for j=Rset
         for k=G

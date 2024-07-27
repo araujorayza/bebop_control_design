@@ -32,7 +32,7 @@ TRAJECTORY      = 'circle';
 % ControlType = 'CNMAC2023';
 ControlType = 'Sproc';
 % ControlType = 'WeiTeo1';
-% MozelliTeo6
+% ControlType = 'MozelliTeo6';
 % SereniTeo2
 % ControlType = 'openloop';
 % ICUAS
@@ -64,9 +64,9 @@ if(sphinx)
     load gamma_sphinx
 else
     load gamma_bebop
-%     gamma = [4.0527, -0.1135, 4.1320, 0.0836 , 5.1451, 3.2975, 4.4168, 2.7023];
-%     gamma = [4.3321, 0.2333, 4.1220, 0.4145, 4.4206, 3.1341, 5.9289, -0.3868];
-gamma = [3.8195    0.1614    3.8117    0.3855    1.6844    1.7983    4.4994    2.0476];
+%   gamma = [4.0527, -0.1135, 4.1320, 0.0836 , 5.1451, 3.2975, 4.4168, 2.7023];
+    gamma = [4.3321, 0.2333, 4.1220, 0.4145, 4.4206, 3.1341, 5.9289, -0.3868];
+%   gamma = [3.8195    0.1614    3.8117    0.3855    1.6844    1.7983    4.4994    2.0476];
 end
 %%    
 SimStruct.trajectory=TRAJECTORY;
