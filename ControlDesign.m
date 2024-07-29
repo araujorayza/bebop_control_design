@@ -61,9 +61,10 @@ switch ControlType
             K = LMI_Teo6Mozelli(A,B,fi,mu);
         end
         [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B,K);
-        ControlType = 'PDC';
+        ControlType = [];
     otherwise
         K=[];
+        ControlType = [];
         disp('The controller you chose is not an option!')
 end
 
