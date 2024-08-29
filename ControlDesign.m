@@ -949,7 +949,7 @@ else
     Rset = 1:size(B,2);
     n = size(A{1},2);
     G = [1,2,3,4];
-
+    Z_top=[5;5;5;5;5;5;5;pi/3];
     for j = Rset
         A{j} = A{j}-B{j}*K{j};
     end
@@ -990,6 +990,13 @@ else
 %             if(k~=j)
                 LMIS = [LMIS, Upsilon{k,j} <= 0];
 %             end
+        end
+    end
+
+    ev =eye(8); 
+    for k = G
+        for v = 1:8
+            LMIS = [LMIS,P{k} - 1/(Z_top(v)^2)*ev(:,v)*ev(v,:)>=0];
         end
     end
 
