@@ -62,6 +62,18 @@ switch ControlType
         end
         [K,P,R,L,A,G,Rset] = Sproc(Modeltype,A,B,K);
         ControlType = [];
+    case 'Mozelli+Sproc'
+        fi=0.5*ones(size(A,2));
+        mu=0.1;
+        if(Modeltype == 2)
+            K = LMI_Teo6MozelliMOD(A,B,fi,mu);
+        else
+            K = LMI_Teo6Mozelli(A,B,fi,mu);
+        end
+%         phi=2*pi/360*100*[1;1;1;1];
+        phi = [1.35;1.05;0.76;1.35];
+        [K,P,R,L,M,l,bigL,lambda, A,Rset] = MozelliSproc(Modeltype,A,B,K,phi);
+        ControlType = [];
     otherwise
         K=[];
         ControlType = [];
@@ -1098,4 +1110,84 @@ for j=Rset
 end
 legend()
 grid on
+end
+
+function [K,P,R,L,M,l,bigL,lambda, A,Rset]=MozelliSproc(Modeltype,A,B,K,phi)
+if Modeltype ~= 1
+    K = []
+else
+    Rset = 1:size(B,2);
+    n = size(A{1},2);
+    Z_top=[5;5;5;5;5;5;5;pi/3];
+    for i = Rset
+        A{i} = A{i}-B{i}*K{i};
+    end
+
+    %LMI calculation
+    M = sdpvar(n,n,'symmetric');
+    for i=Rset
+        P{i} = sdpvar(n,n,'symmetric');
+        R{i} = sdpvar(n,n,'full');
+        L{i} = sdpvar(n,n,'full');
+    end
+
+    for i=Rset
+        Q{i}=eye(8);
+    end
+
+    P_phi=zeros(n,n);
+    for i=Rset
+        P_phi = P_phi + phi(i)*( P{i} + M);
+    end
+    %L max = pi^2/9
+    bigL = pi^2/9-0.001;
+    sdpvar l
+%     l = 0.3
+    lambda = 1;
+
+    for i=Rset
+        a11 = P_phi + lambda*P{i} - L{i}*A{i} - A{i}'*L{i}';
+        a21 = P{i} - R{i}*A{i} + L{i}';
+        a22 = R{i} + R{i}';
+        Upsilon{i} = [a11,  a21',       zeros(n,1);
+                      a21,  a22,        zeros(n,1);
+               zeros(1,n), zeros(1,n),  -lambda*l];
+    end
+    LMIS=[];
+
+    for i=Rset
+        LMIS = [LMIS, Upsilon{i} <= 0, P{i}>=Q{i}, P{i}+M>=0 ];
+    end
+
+    LMIS = [LMIS, l >= 0, lambda>= 0,l <= bigL];
+
+
+    opts=sdpsettings;
+    opts.solver='sedumi';
+    opts.verbose=0;
+
+    sol = solvesdp(LMIS,[],opts);
+    p=min(checkset(LMIS));
+    if p > 0
+        for i = Rset
+            P{i} = double(P{i})
+            R{i} = double(R{i})
+            L{i} = double(L{i})
+        end
+        l=double(l)
+        M=double(M)
+    else
+        disp('Infeasible');
+        P=[];
+        return;
+    end
+    % Calculate b
+    % The model is valid for all R^n because the nonlinearities are
+    % globally bounded. I chose the min upper bound of model validity
+    % as +pi
+%     [b,lower_V,upper_V,PSI] =calc_b(G,h,P,pi);
+    %Plot hs
+%     plot_h(Rset,h,PSI);
+    save('drone_sys_data','-append','P','l','lambda');
+end
 end

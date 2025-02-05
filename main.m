@@ -30,7 +30,8 @@ TRAJECTORY      = 'circle';
 
 
 % ControlType = 'CNMAC2023';
-ControlType = 'Sproc';
+% ControlType = 'Sproc';
+ControlType = 'Mozelli+Sproc';
 % ControlType = 'WeiTeo1';
 % ControlType = 'MozelliTeo6';
 % SereniTeo2
