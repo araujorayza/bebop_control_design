@@ -16,7 +16,7 @@ global small_k
 sphinx = false; %flag for which gamma we use
 
 
-InitSTATE=0*[0;0;0;0;0.5;0;0;0];%0*rand([8,1]); %
+InitSTATE=[0;0;0;0;0;0;0;0.5];%0*rand([8,1]); %
 
 small_k = 0.1; %gain value of the error dynamic gain
 tol = 9;
@@ -31,9 +31,9 @@ TRAJECTORY      = 'circle';
 
 % ControlType = 'CNMAC2023';
 % ControlType = 'Sproc';
-ControlType = 'Mozelli+Sproc';
+% ControlType = 'Mozelli+Sproc';
 % ControlType = 'WeiTeo1';
-% ControlType = 'MozelliTeo6';
+ControlType = 'MozelliTeo6';
 % SereniTeo2
 % ControlType = 'openloop';
 % ICUAS
